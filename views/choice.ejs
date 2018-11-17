@@ -1,0 +1,28 @@
+<html>
+<head>
+  <link href="bootstrap.min.css" style="text/css" rel="stylesheet"/>
+</head>
+<body>
+
+  <form method="GET" action="/ondaywork">
+
+  <select name="selected_value">
+
+    <option value="new_schedule">New schedule</option>
+    <option value="<%= date_to_first %>"><%= date_to_first %></option>
+
+  </select>
+
+<input type="submit"/>
+
+</form>
+<% if(runyes){%>
+  <form method="GET" action="/runningworkleft">
+  <label>You have running work left behind ...click below to run</label>
+  <input type="submit" class="btn btn-primary" value="run"/>
+</form>
+
+<%}%>
+
+</body>
+</html>

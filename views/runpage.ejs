@@ -1,0 +1,65 @@
+<html>
+<script src="jquery.min.js" type="text/javascript"></script>
+<body>
+  <h1 id="text">Hi
+  </h1>
+  <table id='table' border="1px"><tr><td colspan="2" align="center">schedule</td></tr></table>
+</body>
+<script>
+var stackdata=<%-JSON.stringify(runtimedata) %>
+console.log(stackdata);
+var a=Object.keys(stackdata);
+var dat=new Date();
+var cures=(dat.getHours()*3600)+(dat.getMinutes()*60)+(dat.getSeconds());console.log(cures);
+var m=[];
+function k(){if(a.length==1){if(cures<=a[0])m=a.concat(m);return 0;}
+    var mid=Math.floor(a.length/2);
+    if(mid!=0){alert("h");
+      if(a[mid]==cures){m=a.splice(mid);return 0;}
+        else if(a[mid]<cures){
+            a=a.splice(mid);k()}else{m=m.concat(a.splice(mid));a=a.splice(0,mid);k()}
+    }
+
+
+  }
+    k();send={}
+    for(var i=0;i<m.length;i++)
+    {send[m[i]]=stackdata[m[i]];
+      if(i==m.length-1)
+      $.get('/saverunwork/'+JSON.stringify(send))
+    }
+    console.log("st"+a+"m"+m+"c"+cures);var xhttp=new XMLHttpRequest();
+  var timer=setInterval( function(){ /*xhttp.onreadystatechange=function(){
+      if(this.responseText=='matched'){console.log("trt"+typeof this.responseText);
+        $("#text").append('<br />'+this.responseText);
+        m=m.splice(1);
+        console.log("m:"+m);this.responseText='ok'};};
+
+    if(m.length!=0){
+    xhttp.open('GET','aurdino/m0sec='+m[0]);
+    xhttp.send();}*/
+if(m.length!=0){
+    $.get("aurdino/m0sec="+m[0]+"/bell="+stackdata[m[0]], function(data, status){
+              //  console.log("Data: " + data + "\nStatus: " + status);
+                if(data!="Not matched"){$('#table').append('<tr><td>'+data.split(':')[0]+'</td><td>'+data.split(':')[1]+'</td></tr>');m=m.splice(1);console.log(m);}
+            });
+
+}
+else {
+  $('#table').append('schedule over dude');clearInterval(timer);
+  $.get("finish",function(data,status){
+    alert("finish");
+  })
+}
+
+  },1000);
+  /*var timer=  setInterval(function(){
+xhttp.onreadystatechange=function(){
+  if(this.responseText!='Not matched'){
+    $("#text").append('<br />'+this.responseText);m.splice(1);console.log(m);};};
+
+if(m.length!=0){
+xhttp.open('GET','aurdino/m0sec='+m[0]);
+xhttp.send();}
+else {clearInterval(timer);}},1000);*/
+</script>

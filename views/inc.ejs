@@ -1,0 +1,114 @@
+
+
+  <script src="jquery.min.js"></script>
+  <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+      <link rel="stylesheet" href="bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="css/timePicker.css">
+      <script type="text/javascript" src="js/jquery-timepicker.js"></script>
+
+
+  <script>
+  var timename=0;
+  var timings={};
+  </script><br /><br /><center>
+    <ul class="nav navbar-nav">
+    <li><input type="button" value="show" onclick="show()" />
+    </li>
+      <li><input type="button" value="add" class="btn btn-warning" id="add" onclick="add()" /></li>
+
+      </ul>
+<form name="form">
+  <table border="1px" id="table"  cellpadding="1">
+  <% var length=Object.keys(data).length %>
+    <% var short='short' %>
+    <% var long='long' %>
+  <% var keys=Object.keys(data) %>
+  <% for(var i=0;i<length;i++){ %>
+
+<tr id="time<%= i %>row"><td><input type="text" value="<%= keys[i] %>" id="time<%= i %>" name="time<%= i %>" disabled/></td>
+  <td><select class="form-control" name="time<%= i %>bell" id="time<%= i %>bell"disabled>
+    <option value="<%= data[keys[i]] %>"/><%= data[keys[i]] %></option>
+    <% if(data[keys[i]]=='long'){%><% var bell='short'%><%}%>
+      <% if(data[keys[i]]=='short'){%><% var bell='long'%><%}%>
+    <option value="<%= bell %>"><%= bell %></option>
+</select>
+  </td>
+  <td><input type="button" class="btn btn-danger" value="delete" onclick="delet('time<%= i %>')" /></td>
+<td><input type="button" value="save" class="btn btn-success" onclick="save('time<%= i %>')" id="savetime<%= i%>" disabled/></td>
+<td><input type="button" value="edit" class="btn btn-primary" onclick="document.getElementById('time<%= i %>').disabled=false;document.getElementById('time<%= i %>bell').disabled=false;document.getElementById('savetime<%= i %>').disabled=false;"/></td>
+</tr>
+<input type="hidden" id="hidetime<%= i %>" value="<%= keys[i] %>" />
+
+    <% } %></table></form></center>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+    timename=Number('<%= i %>');
+    timings=<%-JSON.stringify(data)%>;
+    </script>
+    <script>
+    var d={'a':5,'f':9};
+    delete d['a'];
+  //  alert(timename+1);
+    function delet(time)
+    {//alert(form.String(time).value);
+      alert(document.getElementById(time).value);
+      if(document.getElementById("hide"+time).value!="")
+      delete timings[document.getElementById("hide"+time).value];
+      $("#"+time+"row").remove();
+        $("#hide"+time+"").remove();
+        document.getElementById("add").disabled=false;
+        if(Object.keys(timings).length==0)
+      managesave(true);
+        else {
+          managesave(false);
+        }
+    }
+    function save(time)
+    {/*check for same time* else do following*/
+      if(document.getElementById("hide"+time).value!="")
+      delete timings[document.getElementById("hide"+time).value];
+      document.getElementById("hide"+time).value=document.getElementById(time).value;
+
+      timings[document.getElementById(time).value]=document.getElementById(time+"bell").value;
+      document.getElementById(time).disabled=true
+      document.getElementById(time+"bell").disabled=true
+      document.getElementById("save"+time).disabled=true
+      document.getElementById("add").disabled=false;
+      }
+    function show()
+
+    {
+      var p=Object.keys(timings);
+for(var j=0;j<Object.keys(timings).length;j++)
+{document.write(p[j]+":"+timings[p[j]]);
+
+}
+    }
+    function add()
+    {var htmladd='<tr id="time'+timename+'row"><td><input type="text" value="" id=time'+timename+' name=time'+timename+'/></td><td><select id=time'+timename+'bell name=time'+timename+'bell><option value="short">short</option><option value="long">long</option></select></td><td> <input type="button" value="delete" class="btn btn-danger" onclick="delet(\'time'+timename+'\')" /> </td><td><input type="button" value="save" class="btn btn-success" onclick=save(\'time'+timename+'\') id="savetime'+timename+'" /></td><td><input type="button" value="edit" class="btn btn-primary" onclick="document.getElementById(\'time'+timename+'\').disabled=false;document.getElementById(\'time'+timename+'bell\').disabled=false;document.getElementById(\'savetime'+timename+'\').disabled=false;"/></td></tr><input type="hidden" id=hidetime'+timename+' value="" />';
+      timename+=1;
+      document.getElementById("add").disabled=true;
+      $("#table").append(htmladd);
+      managesave(false);$('input[type=text]').hunterTimePicker();
+    }
+
+    </script>
+
+    <script>
+    	$().ready(function() {
+alert("inc");
+    		$('input[type=text]').hunterTimePicker();
+
+    	});
+    </script>

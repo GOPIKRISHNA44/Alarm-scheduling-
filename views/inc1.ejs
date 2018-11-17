@@ -1,0 +1,28 @@
+<html>
+
+<body>
+<% if(selected_value=="no"){%>
+  <h1>You can create your new schedule here </h1>
+  <% var data={} %>
+  <%}%>
+  <% if(selected_value!="no"){%>
+    <% if(Object.keys(data).length==0) {%>
+      <p>Seems you dant have a schedule i this date...dt wrry create a one below</p>
+<%}%>
+    <%}%>
+<% include inc.ejs %>
+    <script>
+  //  document.getElementById("keepvalue").value=JSON.stringify(timings);
+    function keepvalue(){
+      alert(JSON.stringify(timings));
+      document.getElementById("keepvaluetext").value=JSON.stringify(timings);
+      return true;}
+      function managesave(value){}
+    </script>
+    <form method="GET" action="/runtodaypage" onsubmit="return keepvalue()">
+<input type="hidden" id="keepvaluetext" name="data"/>
+    <input type="submit" value="run"  />
+  </form>
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<html><head><link href="frame.css" rel="stylesheet" type="text/css"/>
+  <link href="date.css" rel="stylesheet" type="text/css" />
+<script src="jquery.min.js" type="text/javascript"></script>
+    <link href="bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="popup.css" rel="stylesheet" type="text/css" />
+  <script src="j1.js" type="text/javascript"></script>
+  <script src="j2.js" type="text/javascript"></script>
+</head>
+<body>
+  		<header id="header">
+  			<div id="logo">
+  				<h1>GVP</h1>
+  			</div>
+  		</header><!-- nav tag ->left part-->
+      		<nav id="nav">
+      			<div class="innertube">
+
+                <form method="GET" action="/manage" class="form-group" >
+                <input type="text" name="date" id="datepicker" placeholder="Enter date"/>
+                <br />
+                <input type="submit" value="get" class="btn btn-primary"/>
+              </form>
+              <form method="GET" action="get_tasks">
+              <input type="submit" class="btn btn-primary" value="Tasks" />
+            </form>
+            <div id="choicecontent"></div>
+      			</div>
+      		</nav>
+
+
+<!--from here right part-->
+<main>
+			<div class="innertube">
+
+
+        <% if(flag!='yes'){%><% if(taskselect=='no'){ %>
+          <% if(Object.keys(data).length==0){ %>
+            <p> No Schedule at that date...click add belw</p>
+            <%}%>
+            <% if(Object.keys(data).length!=0){ %>
+              <p> Your schedule</p>
+              <form action="/deltschdule" method="GET">
+                <input type="submit" value="Delete total schedule" class="btn btn-danger"/>
+              </form>
+              <%}%>
+            <% include inc.ejs %>
+          <!-- /.navbar-collapse -->
+
+        <form method="GET" action="/save" onsubmit="return keepvalue()">
+        <input type="hidden" id="keepvaluetext" name="data"/>
+        <input type="submit" value="save" id="managesave"class="btn btn-success" disabled/>
+        </form>
+          <%}}%>
+<% if(taskselect!='no'){%>
+  <script>var valuef;</script>
+
+  <div id="content">
+
+    <%if(tasks.length==0){%><h1>no content</h1><%}%>
+    <%if(tasks.length!=0){%>
+      <script>
+      data={}
+      <%for(var i=0;i<tasks.length;i++){%>
+
+data['<%=tasks[i].taskid%>']=<%-JSON.stringify(tasks[i].task)%>
+
+<%}%> </script>
+      <table border="1px" class="table">
+<%for(var i=0;i<tasks.length;i++){%>
+<tr><td>Task<%=i%></td>
+  <td>
+    <div class="popup" onclick=myFunction('<%= tasks[i].taskid %>') >Click here to view task
+      <span class="popuptext" id="myPopup<%= tasks[i].taskid %>"></span>
+    </div>
+  </td>
+  <td>
+
+<input type="radio" name="task"  value="<%=tasks[i].taskid%>" /></td>
+</tr>
+  <%}%></table>
+<script>
+function myFunction(id)
+{
+  var popup = document.getElementById("myPopup"+id);
+  var text="<table>";
+  var obj=data[id];
+  var keys=Object.keys(obj)
+  for(var i=0;i<keys.length;i++)
+  text=text+"<tr><td>"+keys[i]+"</td><td>"+obj[keys[i]]+"</tr>"
+  text=text+"</table>"
+//  alert(text);
+   $("#myPopup"+id).html(text)
+   popup.classList.toggle("show");
+}
+</script>
+<p>One to many</p>
+<input type="radio" id="Onetomany" name="choice"/>
+<p>Random</p>
+<input type="radio" id="Randomdates" name="choice"/>
+<script>
+$("#Onetomany").click(function(){
+  var text="<form method='GET' action='/Onetomany'><input type='text' class='form-control' name='date' id='datepicker'/><input type=text placeholder='Enter days' name=days class='form-control'/><input type=submit class='btn btn-primary' value=submit /></form>"
+  $("#choicecontent").html(text)
+  setInterval(function(){$("#datepicker").datepicker();},3000);
+})
+$("#Randomdates").click(function(){
+  $("#choicecontent").html("<h1>Random dates</h1>")
+})
+</script>
+
+  <%}%>
+</div>
+
+
+<%}%>
+
+			</div>
+		</main>
+
+
+
+    <script>
+  //  document.getElementById("keepvalue").value=JSON.stringify(timings);
+
+  function managesave(value){  document.getElementById("managesave").disabled=value;}
+    function keepvalue(){
+      alert(JSON.stringify(timings));
+      document.getElementById("keepvaluetext").value=JSON.stringify(timings);
+      return true;}
+    </script>
+    <script>
+      $( function() {
+        $( "#datepicker" ).datepicker();
+      } );
+
+      </script>
+
+</body>
+
+
+
+</html>
